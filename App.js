@@ -85,7 +85,7 @@ export default function App() {
       />
       <StatusBar style="auto" />
 
-      <Text>Ola</Text>
+      <Text>Ola mundo</Text>
     </View>
   );
 }
