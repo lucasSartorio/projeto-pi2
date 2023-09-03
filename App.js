@@ -84,6 +84,8 @@ export default function App() {
         input={""}
       />
       <StatusBar style="auto" />
+
+      <Text>Ola</Text>
     </View>
   );
 }
