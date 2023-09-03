@@ -15,8 +15,17 @@ export default function App() {
     hasExecuted: false,
   });
 
+  const [errorMsg, setErrorMsg] = useState(null);
+
   useEffect(() => {
     (async () => {
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+       if (status !== 'granted') {
+         setErrorMsg('Permission to access location was denied');
+         return;
+      }
+
       Location.watchPositionAsync({accuracy: 6 , distanceInterval: 15, timeInterval: 1000}, (location) => {
         console.log(location);
         setCoordinates( current => {
@@ -84,8 +93,6 @@ export default function App() {
         input={""}
       />
       <StatusBar style="auto" />
-
-      <Text>Ola mundo</Text>
     </View>
   );
 }
