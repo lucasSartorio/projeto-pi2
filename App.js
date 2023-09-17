@@ -8,31 +8,23 @@ import { getPreciseDistance } from 'geolib'
 const KM = 100;
 
 export default function App() {
-  const [coordinates, setCoordinates] = useState({
+  const [ state, setState ] = useState({
     latitude: 0,
     longitude: 0,
     totalDistance: 0,
     kmDistance: 0,
     speed: 0,
     hasExecuted: false,
-    n: 0,
+    totalTime: 0,
+    kmTime: 0,
+    timeList: [],
   });
-
-  const [ displayTime, setDisplayTime ] = useState(0);
-
-  let totalTime = 0;
-  let kmTime = 0;
-  let timeList = [];
-
-  const [ tL, setTL ] = useState([])
   
   const [ errorMsg, setErrorMsg ] = useState(null);
   
   useEffect(() => {
       const evento = setInterval(() => {
-        setDisplayTime(current => current + 1);
-        totalTime++;
-        kmTime++;
+        setState(current => ({ ...current, totalTime: current.totalTime + 1, kmTime: current.kmTime + 1}));
       }, 1000);
 
       (async () => {
@@ -45,7 +37,7 @@ export default function App() {
         Location.watchPositionAsync({accuracy: 6 , timeInterval: 10000}, (location) => {
           console.log("Location: ", location);
 
-          setCoordinates(current => {
+          setState(current => {
             if(current.hasExecuted === false) {
               return {
                 latitude: location.coords.latitude, 
@@ -54,7 +46,9 @@ export default function App() {
                 kmDistance: 0, 
                 speed: 0,
                 hasExecuted: true,
-                n: 0,
+                totalTime: 0,
+                kmTime: 0,
+                timeList: [],
               }
             }
 
@@ -76,11 +70,13 @@ export default function App() {
               newSpeed = 0;
             }
 
-            let newKmDistance = current.kmDistance + deltaDistance
+            let newKmDistance = current.kmDistance + deltaDistance;
+            let newtimeList = [...current.timeList];
+            let newKmTime = current.kmTime;
             if(newKmDistance > KM) {
-              timeList.push({kmTime});
-              kmTime = 0;
-              newKmDistance = 0
+              newtimeList.push(newKmTime);
+              newKmTime = 0;
+              newKmDistance = 0;
             }
 
             console.log("Velocidade: ", current.speed, ", Deslocamento: ", deltaDistance);
@@ -92,6 +88,9 @@ export default function App() {
               kmDistance: newKmDistance,
               speed: newSpeed,
               hasExecuted: true,
+              totalTime: current.totalTime,
+              kmTime: newKmTime,
+              timeList: [...newtimeList],
             });
           });
         });
@@ -106,15 +105,15 @@ export default function App() {
     <View style={styles.container}>
         <Boxdefault
           text="Distância percorrida"
-          input={ coordinates.totalDistance + " m" }
+          input={ state.totalDistance + " m" }
         />
         <Boxdefault
           text="Distância por km percorrida"
-          input={ coordinates.kmDistance + " m" }
+          input={ state.kmDistance + " m" }
         />
         <Boxdefault
           text="Velocidade"
-          input={ coordinates.speed + " km/h"}
+          input={ state.speed + " km/h"}
         />  
         {/* <Boxdefault
           text="Média de velocidade por KM"
@@ -122,10 +121,10 @@ export default function App() {
         /> */}
         <Boxdefault
           text="Tempo total"
-          input={displayTime + ' s'}
+          input={ state.totalTime + ' s' + ' | ' + state.kmTime }
         />
 
-        <Text>{JSON.stringify(timeList)}</Text>
+        <Text>{JSON.stringify(state.timeList)}</Text>
         
         {/* {kmTimeHistory.length > 0 ? kmTimeHistory.map((t, index) => <Text key={index}>{t}</Text>) : <Text>Sem dados</Text>}     */}
     </View>
