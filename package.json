@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^19.0.0",
     "@react-native-community/geolocation": "^3.0.6",
     "expo": "~49.0.8",
     "expo-location": "~16.1.0",
@@ -16,7 +17,9 @@
     "expo-status-bar": "~1.6.0",
     "geolib": "^3.3.4",
     "react": "18.2.0",
-    "react-native": "0.72.4"
+    "react-dom": "18.2.0",
+    "react-native": "0.72.4",
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
