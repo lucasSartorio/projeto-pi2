@@ -10,6 +10,9 @@
       "eas": {
         "projectId": "e10a4eb7-9179-4365-88e6-530ec0265574"
       }
+    },
+    "android": {
+      "package": "com.lucassartorio.bolsonaropresidente"
     }
   }
 }
